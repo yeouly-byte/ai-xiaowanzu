@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub 中文导航</title>
+<style>
+  :root{
+    --bg:#0d1117; --card:#161b22; --bd:#30363d; --fg:#e6edf3;
+    --dim:#8b949e; --accent:#58a6ff; --green:#3fb950; --orange:#d29922;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--fg);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    line-height:1.6;padding:32px 20px 64px;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+  header img{width:64px;height:64px;border-radius:50%;border:2px solid var(--bd)}
+  h1{font-size:26px;font-weight:600}
+  .sub{color:var(--dim);font-size:14px}
+  .hint{background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--accent);
+        padding:12px 16px;border-radius:6px;margin:20px 0 32px;font-size:14px;color:var(--dim)}
+  .hint b{color:var(--fg)}
+  h2{font-size:18px;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+  h2 span{color:var(--dim);font-weight:400;font-size:13px;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  a.card{
+    display:block;background:var(--card);border:1px solid var(--bd);border-radius:8px;
+    padding:14px 16px;text-decoration:none;color:var(--fg);transition:.15s;
+  }
+  a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  a.card .t{font-weight:600;font-size:15px;margin-bottom:2px}
+  a.card .en{color:var(--dim);font-size:12px;font-family:ui-monospace,Consolas,monospace}
+  a.card .d{color:var(--dim);font-size:13px;margin-top:6px}
+  .repo .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .badge{font-size:11px;padding:1px 8px;border-radius:10px;border:1px solid var(--bd);color:var(--dim);white-space:nowrap}
+  .badge.pub{color:var(--green);border-color:var(--green)}
+  .badge.pri{color:var(--orange);border-color:var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--bd)}
+  th{color:var(--dim);font-weight:500;font-size:13px}
+  td.en{font-family:ui-monospace,Consolas,monospace;color:var(--accent);font-size:13px}
+  .search{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .search input{
+    flex:1;min-width:200px;background:var(--card);border:1px solid var(--bd);
+    border-radius:6px;padding:10px 14px;color:var(--fg);font-size:14px;
+  }
+  .search input:focus{outline:none;border-color:var(--accent)}
+  .search button{
+    background:#238636;border:1px solid #2ea043;color:#fff;border-radius:6px;
+    padding:10px 20px;font-size:14px;cursor:pointer;font-family:inherit;
+  }
+  .search button:hover{background:#2ea043}
+  #status{color:var(--dim);font-size:13px;margin-top:10px}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--bd);
+         color:var(--dim);font-size:13px;text-align:center}
+  .skel{color:var(--dim);font-size:14px;padding:12px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img id="avatar" src="https://avatars.githubusercontent.com/u/311768035?v=4" alt="头像">
+    <div>
+      <h1 id="uname">GitHub 中文导航</h1>
+      <div class="sub" id="ustat">正在读取账号信息…</div>
+    </div>
+  </header>
+
+  <div class="hint">
+    <b>说明：</b>GitHub 官方没有中文界面，且禁止自己的页面被其他网页嵌入
+    （响应头 <code>X-Frame-Options: deny</code>），所以无法把 GitHub 本体直接翻译成中文。
+    本页是一个<b>中文入口导航</b>：列出常用功能的中文说明与直达链接，点击后跳转 GitHub 原站。
+  </div>
+
+  <h2>搜索 <span>Search</span></h2>
+  <div class="search">
+    <input id="q" type="text" placeholder="输入关键词，例如：python 爬虫">
+    <button onclick="doSearch('repositories')">搜仓库</button>
+    <button onclick="doSearch('code')">搜代码</button>
+    <button onclick="doSearch('users')">搜用户</button>
+    <button onclick="doSearch('issues')">搜问题</button>
+  </div>
+  <div id="status"></div>
+
+  <h2>我的仓库 <span>My Repositories</span></h2>
+  <div class="grid" id="repos"><div class="skel">加载中…</div></div>
+
+  <h2>常用功能导航 <span>Navigation</span></h2>
+  <div class="grid">
+    <a class="card" href="https://github.com/dashboard" target="_blank" rel="noopener">
+      <div class="t">首页面板</div><div class="en">Dashboard</div>
+      <div class="d">查看动态、推荐项目和你关注的人</div></a>
+    <a class="card" href="https://github.com/new" target="_blank" rel="noopener">
+      <div class="t">新建仓库</div><div class="en">New repository</div>
+      <div class="d">创建一个新的代码仓库</div></a>
+    <a class="card" href="https://github.com/notifications" target="_blank" rel="noopener">
+      <div class="t">通知</div><div class="en">Notifications</div>
+      <div class="d">别人回复你、提及你的消息</div></a>
+    <a class="card" id="lnk-issues" href="https://github.com/issues" target="_blank" rel="noopener">
+      <div class="t">我的问题</div><div class="en">Issues</div>
+      <div class="d">你提出或被指派的任务与缺陷</div></a>
+    <a class="card" id="lnk-pulls" href="https://github.com/pulls" target="_blank" rel="noopener">
+      <div class="t">合并请求</div><div class="en">Pull requests</div>
+      <div class="d">代码合并请求，等待审查的改动</div></a>
+    <a class="card" id="lnk-stars" href="https://github.com/stars" target="_blank" rel="noopener">
+      <div class="t">我的收藏</div><div class="en">Stars</div>
+      <div class="d">你点过星标的好项目</div></a>
+    <a class="card" href="https://github.com/explore" target="_blank" rel="noopener">
+      <div class="t">探索发现</div><div class="en">Explore</div>
+      <div class="d">发现热门和有趣的开源项目</div></a>
+    <a class="card" href="https://github.com/trending" target="_blank" rel="noopener">
+      <div class="t">趋势榜</div><div class="en">Trending</div>
+      <div class="d">当前最热门的仓库排行</div></a>
+    <a class="card" href="https://github.com/settings/profile" target="_blank" rel="noopener">
+      <div class="t">账号设置</div><div class="en">Settings</div>
+      <div class="d">修改头像、昵称、密码等</div></a>
+    <a class="card" href="https://github.com/marketplace" target="_blank" rel="noopener">
+      <div class="t">应用市场</div><div class="en">Marketplace</div>
+      <div class="d">第三方工具与自动化应用</div></a>
+  </div>
+
+  <h2>常用术语中英对照 <span>Glossary</span></h2>
+  <table>
+    <tr><th>英文</th><th>中文</th><th>含义</th></tr>
+    <tr><td class="en">Repository</td><td>仓库</td><td>存放项目代码的地方，简称 repo</td></tr>
+    <tr><td class="en">Commit</td><td>提交</td><td>把一次代码修改记录进版本历史</td></tr>
+    <tr><td class="en">Branch</td><td>分支</td><td>从主线分出来独立开发的副本</td></tr>
+    <tr><td class="en">Main / Master</td><td>主分支</td><td>项目的默认主线分支</td></tr>
+    <tr><td class="en">Merge</td><td>合并</td><td>把一个分支的改动并入另一个分支</td></tr>
+    <tr><td class="en">Fork</td><td>派生 / 复刻</td><td>把别人的仓库复制一份到自己账号下</td></tr>
+    <tr><td class="en">Clone</td><td>克隆</td><td>把远程仓库完整下载到本地</td></tr>
+    <tr><td class="en">Pull Request</td><td>合并请求</td><td>请求把你的改动并入目标仓库，简称 PR</td></tr>
+    <tr><td class="en">Issue</td><td>问题 / 议题</td><td>用来报告缺陷或讨论需求的工单</td></tr>
+    <tr><td class="en">Star</td><td>星标 / 收藏</td><td>给项目点赞并收藏，相当于书签</td></tr>
+    <tr><td class="en">Watch</td><td>关注</td><td>订阅仓库动态，有更新会通知你</td></tr>
+    <tr><td class="en">Fork / Star / Watch</td><td>派生 / 星标 / 关注</td><td>仓库右上角三个最常用的按钮</td></tr>
+    <tr><td class="en">Release</td><td>发行版</td><td>正式发布的版本，通常附带下载包</td></tr>
+    <tr><td class="en">Tag</td><td>标签</td><td>给某个提交打的记号，如 v1.0</td></tr>
+    <tr><td class="en">Actions</td><td>自动化流程</td><td>自动构建、测试、部署的流水线</td></tr>
+    <tr><td class="en">Pages</td><td>静态网站托管</td><td>用仓库内容免费发布网站（本页就是）</td></tr>
+    <tr><td class="en">Gist</td><td>代码片段</td><td>分享单段代码的轻量方式</td></tr>
+    <tr><td class="en">Raw</td><td>原始文件</td><td>查看不经过渲染的纯文本内容</td></tr>
+    <tr><td class="en">Blame</td><td>追溯</td><td>查看每一行代码是谁、何时改的</td></tr>
+    <tr><td class="en">Diff</td><td>差异对比</td><td>显示改动前后的区别</td></tr>
+    <tr><td class="en">README</td><td>说明文档</td><td>仓库首页展示的项目介绍文件</td></tr>
+    <tr><td class="en">License</td><td>许可证</td><td>规定别人能如何使用你的代码</td></tr>
+    <tr><td class="en">Token</td><td>访问令牌</td><td>代替密码用于命令行或程序的凭证</td></tr>
+  </table>
+
+  <footer>
+    本页部署在 GitHub Pages · <a href="https://github.com/yeouly-byte/ai-xiaowanzu" style="color:var(--accent)">查看源码</a>
+  </footer>
+</div>
+
+<script>
+const USER = 'yeouly-byte';
+
+// 搜索
+function doSearch(type){
+  const q = document.getElementById('q').value.trim();
+  if(!q){ document.getElementById('status').textContent = '请先输入关键词'; return; }
+  const map = {
+    repositories: 'https://github.com/search?q=' + encodeURIComponent(q) + '&type=repositories',
+    code:         'https://github.com/search?q=' + encodeURIComponent(q) + '&type=code',
+    users:        'https://github.com/search?q=' + encodeURIComponent(q) + '&type=users',
+    issues:       'https://github.com/search?q=' + encodeURIComponent(q) + '&type=issues'
+  };
+  document.getElementById('status').textContent = '正在跳转到 GitHub 搜索：' + q;
+  window.open(map[type], '_blank');
+}
+document.getElementById('q').addEventListener('keydown', e => {
+  if(e.key === 'Enter') doSearch('repositories');
+});
+
+// 带用户名的链接
+['issues','pulls','stars'].forEach(k => {
+  const el = document.getElementById('lnk-' + k);
+  if(el) el.href = 'https://github.com/' + k + '?q=is%3A' + (k === 'pulls' ? 'pr' : 'issue') + '+author%3A' + USER;
+});
+
+// 仓库列表
+fetch('https://api.github.com/users/' + USER + '/repos?per_page=100&sort=updated')
+  .then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(repos => {
+    fetch('https://api.github.com/users/' + USER)
+      .then(r => r.json())
+      .then(u => {
+        document.getElementById('uname').textContent = '@' + u.login + ' 的中文导航';
+        document.getElementById('ustat').textContent =
+          '公开仓库 ' + u.public_repos + ' 个 · 关注者 ' + u.followers + ' · 正在关注 ' + u.following;
+        if(u.avatar_url) document.getElementById('avatar').src = u.avatar_url;
+      }).catch(()=>{});
+
+    const box = document.getElementById('repos');
+    if(!repos.length){ box.innerHTML = '<div class="skel">暂无公开仓库</div>'; return; }
+    box.innerHTML = repos.map(r => `
+      <a class="card repo" href="${r.html_url}" target="_blank" rel="noopener">
+        <div class="top">
+          <div class="t">${r.name}</div>
+          <span class="badge ${r.private ? 'pri' : 'pub'}">${r.private ? '私有' : '公开'}</span>
+        </div>
+        <div class="d">${r.description ? r.description : '（暂无描述）'}</div>
+        <div class="d" style="margin-top:8px">
+          ${r.language ? '语言：' + r.language + ' · ' : ''}★ ${r.stargazers_count} · 更新于 ${r.updated_at.slice(0,10)}
+        </div>
+      </a>`).join('');
+  })
+  .catch(e => {
+    document.getElementById('repos').innerHTML =
+      '<div class="skel">仓库列表加载失败（' + e.message + '）。' +
+      '<a href="https://github.com/' + USER + '?tab=repositories" style="color:var(--accent)">点此直接在 GitHub 查看</a></div>';
+  });
+</script>
+</body>
+</html>
